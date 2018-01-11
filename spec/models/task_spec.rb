@@ -1,0 +1,30 @@
+require 'rails_helper'
+
+RSpec.describe Task, type: :model do
+  it 'has a valid factory' do
+    expect(build(:homework)).to be_valid
+  end
+
+  it 'is valid with required attributes' do
+    task = create(:email)
+
+    expect(task).to be_valid
+  end
+
+  it 'will return false on save without a name' do
+    task = build(:homework, name: nil)
+
+    expect(task.save).to eq(false)
+  end
+
+  it 'will throw a "cant be blank" error without a priority' do
+    task = build(:email, priority: nil)
+    task.save
+
+    expect(task.errors[:priority]).to include("can't be blank")
+  end
+
+  it 'will return false on save without a due date'
+
+  it 'belongs to a user'
+end
