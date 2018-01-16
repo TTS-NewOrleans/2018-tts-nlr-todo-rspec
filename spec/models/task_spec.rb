@@ -24,7 +24,14 @@ RSpec.describe Task, type: :model do
     expect(task.errors[:priority]).to include("can't be blank")
   end
 
-  it 'will return false on save without a due date'
+  it 'will return false on save without a due date' do
+    task = build(:email, due_date: nil)
 
-  it 'belongs to a user'
+    expect(task.save).to eq(false)
+  end
+
+  it 'belongs to a user' do
+    expect(Task.reflect_on_association(:user).macro).to eq(:belongs_to)
+  end
+
 end

@@ -37,11 +37,20 @@ RSpec.describe User, type: :model do
     expect(new_user.errors[:email]).to include('has already been taken')
   end
 
-  it 'has many tasks'
+  it 'has 2 tasks' do
+    expect(user.tasks.length).to eq(2)
+  end
 
   it 'shows first and last name with the full_name method' do
     user = User.new(first_name: 'Anita', last_name: 'Mann')
 
     expect(user.full_name).to eq('Anita Mann')
+  end
+
+  it 'returns the tasks that are due today' do
+    task = user.tasks.first
+    task.update(due_date: DateTime.now)
+
+    expect(user.due_today.length).to eq(1)
   end
 end

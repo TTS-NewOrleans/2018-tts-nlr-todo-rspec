@@ -1,3 +1,5 @@
 class Task < ApplicationRecord
-  validates :name, :priority, presence: true
+  belongs_to :user
+
+  validates :name, :priority, :due_date, presence: true
 end
