@@ -67,4 +67,76 @@ RSpec.describe TasksController, type: :controller do
     end
   end
 
+  describe 'POST #create' do
+    let(:user) { create(:user) }
+    let(:valid_attributes) { attributes_for(:email, user_id: user.id) }
+    let(:invalid_attributes) { attributes_for(:invalid_task) }
+
+    context 'with valid attributes' do
+      it 'persists new task' do
+        expect{
+          post :create, params: { task: valid_attributes }
+        }.to change(Task, :count).by(1)
+      end
+
+      it 'redirects to the show view' do
+        post :create, params: { task: valid_attributes }
+
+        expect(response).to redirect_to(assigns(:task))
+      end
+    end
+
+    context 'with invalid attributes' do
+      it 'returns false and rejects the task' do
+        expect{
+          post :create, params: { task: invalid_attributes }
+        }.not_to change(Task, :count)
+      end
+
+      it 're-renders the :new template' do
+        post :create, params: { task: invalid_attributes }
+
+        expect(response).to render_template(:new)
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    let(:task) { create(:email) }
+    let(:new_attributes) { attributes_for(:homework) }
+    let(:invalid_attributes) { attributes_for(:invalid_task) }
+
+    context 'with valid params' do
+      it 'updates the selected task' do
+        patch :update, params: { id: task.to_param, task: new_attributes }
+
+        task.reload
+
+        expect(task.name).to eq('Complete homework')
+        expect(task.priority).to eq(1)
+      end
+
+      it 'redirects to show view' do
+        patch :update, params: { id: task.to_param, task: new_attributes }
+
+        task.reload
+
+        expect(response).to redirect_to(task)
+      end
+
+    end
+
+    context 'with invalid params' do
+      it 'should stay the same' do
+        patch :update, params: { id: task.to_param, task: invalid_attributes }
+        expect(assigns(:task)).to eq(task)
+      end
+
+      it 're-renders the :edit template' do
+        patch :update, params: { id: task.to_param, task: invalid_attributes }
+        expect(response).to render_template(:edit)
+      end
+    end
+  end
+
 end
